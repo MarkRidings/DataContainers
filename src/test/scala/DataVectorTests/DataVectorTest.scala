@@ -22,7 +22,7 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
     val vector_2 = new DataVector(List(1, 3, 4))
     val vector_3 = new DataVector(List(4, 3, 1))
 
-    vector_1 should be === vector_3
+    assert(vector_1 equals vector_3)
     vector_1 equals vector_2 should not be true
   }
 
@@ -32,7 +32,7 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
     val expectedVector = new DataVector(List(-5, 8, 2, 3, 20))
 
-    vector_1 + vector_2 should be === expectedVector
+    assert((vector_1 + vector_2) equals expectedVector)
   }
 
   test("test$minus") {
@@ -41,7 +41,7 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
     val expectedVector = new DataVector(List(11, -1, 1))
 
-    vector_1 - vector_2 should be === expectedVector
+    assert(vector_1 - vector_2 equals expectedVector)
   }
 
   test("test$times") {
@@ -49,7 +49,7 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
     val expectedVector = new DataVector(List(63, 28, 14 ,7))
 
-    vector * 7 should be === expectedVector
+    assert(vector * 7 equals expectedVector)
   }
 
   test("testDot") {
@@ -58,6 +58,13 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
 
     vector_1 dot vector_2 should be (8)
+  }
+
+  test("testAt") {
+    val vector_1 = new DataVector(List(0, 9, -5, 4))
+
+    vector_1.at(0) should be (0)
+    vector_1.at(2) should be (-5)
   }
 
   test("testSquared") {
@@ -80,11 +87,63 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
     vector_2.median should be (3)
   }
 
+  test("testQuartile") {
+    val vector_1 = new DataVector(List(4, 7, 11, -9, 6, 21, 5, 2, 1, 1, 2))
+
+    vector_1.quartile(.7) should be (5)
+    vector_1.quartile(1) should be (21)
+    vector_1.quartile(.00001) should be (-9)
+  }
+
+  test("testInterQuartileRange") {
+    val vector_1 = new DataVector(List(8, 5, 1, 3, 2, 2, -9, -4, 11))
+
+    vector_1.interQuartileRange should be (7)
+  }
+
+  test("testRange") {
+    val vector_1 = new DataVector(List(6, 5, 2, -9, -11, 3))
+
+    vector_1.range should be (17)
+  }
+
+  test("testMean") {
+    val vector_1 = new DataVector(List(9, 6, 4, 2, -1, 3))
+
+    vector_1.mean should be (3.83 +- .02)
+  }
+
+  test("testVariance") {
+    val vector_1 = new DataVector(List(9, 8, -5, 1, 0, 3, 2))
+
+    vector_1.variance should be (22.95 +- .02)
+  }
+
+  test("testStandardDev") {
+    val vector_1 = new DataVector(List(8, 9, 11, 0, 2, -1, -8, 11))
+
+    vector_1.standardDev should be (6.84 +- 0.02)
+  }
+
+  test("testCovariance") {
+    val vector_1 = new DataVector(List(5, 4, 1, 9, 11))
+    val vector_2 = new DataVector(List(1, 11, -9, 5, 4))
+
+    vector_1 covariance vector_2 should be (14.25 +- 0.02)
+  }
+
+  test("testCorrelation") {
+    val vector_1 = new DataVector(List(8, 6, 3, 4, 11, 3))
+    val vector_2 = new DataVector(List(0, 6, -4, 4, 4, 2))
+
+    vector_1 correlation vector_2 should be (0.35 +- 0.02)
+  }
+
   test("toListTest") {
     val vector = new DataVector(List(9, 3, 0))
 
     val expectedValue = List(9, 3, 0)
 
-    vector.toList should be === expectedValue
+    assert(vector.toList equals expectedValue)
   }
 }
