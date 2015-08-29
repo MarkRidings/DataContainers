@@ -1,5 +1,7 @@
 package DataVector
 
+import scala.collection.JavaConverters._
+
 case class DataVector (vector: List[Double]) {
 
   val v = vector
@@ -105,6 +107,10 @@ case class DataVector (vector: List[Double]) {
 
   def toList: List[Double] = {
     this.v
+  }
+
+  def toArray: Array[Double] = {
+    this.v.toArray
   }
 
 }
