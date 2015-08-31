@@ -146,4 +146,11 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
     assert(vector.toList equals expectedValue)
   }
+
+  test("testDistanceTo") {
+    val vector_1 = DataVector(List(5, 4, 0, 1))
+    val vector_2 = DataVector(List(-1, -4, 2 ,6))
+
+    vector_1 distanceTo vector_2 should be (11.357817 +- 0.01)
+  }
 }

@@ -5,6 +5,8 @@ import scala.collection.JavaConverters._
 case class DataVector (vector: List[Double]) {
 
   val v = vector
+  var name: String = ""
+  var classification: String = ""
 
   def size: Int = {
     v.length
@@ -28,6 +30,10 @@ case class DataVector (vector: List[Double]) {
 
   def dot(that: DataVector): Double = {
     (this.v, that.v).zipped.map(_ * _).sum
+  }
+
+  def distanceTo(that: DataVector): Double = {
+    math.sqrt((this.v zip that.v map { case(a, b) => (a - b) * (a - b)}).sum)
   }
 
   def at(index: Int): Double = {
@@ -101,10 +107,6 @@ case class DataVector (vector: List[Double]) {
     }
   }
 
-  def equals(that: DataVector): Boolean = {
-    this.v.equals(that.v)
-  }
-
   def toList: List[Double] = {
     this.v
   }
@@ -113,4 +115,12 @@ case class DataVector (vector: List[Double]) {
     this.v.toArray
   }
 
+  override def equals(that: Any): Boolean = {
+    that match {
+      case vector1: DataVector =>
+        this.v.equals(vector1.v)
+      case _ =>
+        false
+    }
+  }
 }
