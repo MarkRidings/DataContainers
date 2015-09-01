@@ -7,6 +7,8 @@ case class DataVector (vector: List[Double]) {
   val v = vector
   var name: String = ""
   var classification: String = ""
+  var header = List[String]()
+
 
   def size: Int = {
     v.length
