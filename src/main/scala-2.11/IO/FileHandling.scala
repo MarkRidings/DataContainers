@@ -1,5 +1,6 @@
 package IO
 
+import DataMatrix.DataMatrix
 import DataVector.DataVector
 
 import scala.collection.mutable.ListBuffer
@@ -19,6 +20,7 @@ object FileHandling {
       CreateVectors(file, hasLabels)
     }
   }
+
 
   def CreateVectors(data: List[String], hasLabels: Boolean, header:Array[String] = null): List[DataVector] = {
 

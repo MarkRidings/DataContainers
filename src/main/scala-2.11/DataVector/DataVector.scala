@@ -81,9 +81,13 @@ case class DataVector (vector: List[Double]) {
     quartile(.75) - quartile(.25)
   }
 
-  def variance: Double = {
+  def sumOfSquares: Double = {
     val m = mean
-    v.map(x => (x - m) * (x - m)).sum / (size - 1).toDouble
+    v.map(x => (x - m) * (x - m)).sum
+  }
+
+  def variance: Double = {
+    sumOfSquares / (size - 1).toDouble
   }
 
   def standardDev: Double = {

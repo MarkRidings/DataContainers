@@ -1,7 +1,8 @@
-package Learning
+package LeanringTests
 
 import DataVector.DataVector
 import IO.FileHandling
+import Learning.NearestNeighbor
 import org.scalatest.FunSuite
 
 class NearestNeighbor$Test extends FunSuite {
