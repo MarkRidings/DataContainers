@@ -1,5 +1,7 @@
 package Probability
 
+import org.apache.commons.math3.distribution.{FDistribution, TDistribution}
+
 import scala.util.control.Breaks._
 
 object Distribution {
@@ -55,5 +57,17 @@ object Distribution {
     val sigma = math.sqrt(p * (1 - p) * n)
 
     (mu, sigma)
+  }
+
+  def tDistCdf(x: Double, dof: Double): Double = {
+    val tDist = new TDistribution(dof)
+
+    (1 - tDist.cumulativeProbability(x)) * 2
+  }
+
+  def fDistCdf(x: Double, numDof: Double, denDof: Double): Double = {
+    val fDist = new FDistribution(numDof, denDof)
+
+    fDist.cumulativeProbability(x)
   }
 }
