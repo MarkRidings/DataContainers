@@ -113,6 +113,18 @@ case class DataVector (vector: List[Double]) {
     }
   }
 
+  def append(that: Any): DataVector = {
+
+    that match {
+      case v: DataVector =>
+        DataVector(this.v ++ v.v)
+      case l: List[Double] =>
+        DataVector(this.v ++ l)
+      case _ =>
+        throw  new Exception("append can only accept List[Double] and DataVector as arguments")
+    }
+
+  }
   def toList: List[Double] = {
     this.v
   }
