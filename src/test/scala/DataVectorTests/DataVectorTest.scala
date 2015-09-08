@@ -153,4 +153,5 @@ class DataVectorTest extends FunSuite with ShouldMatchers {
 
     vector_1 distanceTo vector_2 should be (11.357817 +- 0.01)
   }
+
 }

@@ -1,9 +1,10 @@
 
 
 import Charts.{ScatterPlot, Pie}
+import DataMatrix.DataMatrix
 import DataVector.DataVector
 import IO.FileHandling
-import Learning.NearestNeighbor
+import Learning.{NeuralNetwork, NearestNeighbor}
 
 import scala.io.Source
 
@@ -11,33 +12,37 @@ import scala.io.Source
 object Main  {
 
   def main (args: Array[String]) {
-    val dx = DataVector(List(5, 3, 2, 1))
-    val dy = DataVector(List(6, 1, 2, 4))
 
-    val names = List("C", "C++", "Java", "Ruby")
+    val input1 = DataVector(List(0, 0))
+    val input2 = DataVector(List(1, 0))
+    val input3 = DataVector(List(0, 1))
+    val input4 = DataVector(List(1, 1))
 
-    /* val pieChart = new Pie
-    pieChart.setData(d)
-    pieChart.setLabels(names)
-    pieChart.setTitle("Languages")
-    pieChart.show() */
+    val inputs = DataMatrix(List(input1, input2, input3, input4))
+    val targets = List(0, 0, 0, 1)
 
-    /*val scatterPlot = new ScatterPlot
-    scatterPlot.setTitle("Test Stuff")
-    scatterPlot.setXData(dx)
-    scatterPlot.setYData(dy)
-    scatterPlot.show()
-  */
+    val n = NeuralNetwork(2, 0, 0, 1)
 
-    val fileName = "src\\test\\scala\\TestData\\bbTest.csv"
+    n.printWeights()
 
-    val data = FileHandling.LoadCsv(fileName, hasHeader = false, hasLabels = true)
+    println("---------- training -----------------")
+    for (j <- 0 until 1000) {
+      for (i <- inputs.matrix.indices) {
 
-    val testData = DataVector(List(0.167842031, 0.046544429, 0.002820874, 0.011283498, 0.133991537, 0.156558533))
+        val output = n.feedForward(inputs.getRow(i))
+        n.adjustWeights(inputs.getRow(i), output, targets.apply(i))
+      }
+    }
 
-    val bestFit = NearestNeighbor.kClassify(1, data, testData)
+    n.printWeights()
 
-    println(bestFit.classification)
+    println("------------- results ----------------")
+    for (i <- inputs.matrix.indices) {
+      val output = n.feedForward(inputs.getRow(i))
+      inputs.getRow(i).toList.foreach(x => print(x + " "))
+      println(" -> " + output)
+    }
+
   }
 
 }

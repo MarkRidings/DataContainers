@@ -1,44 +1,66 @@
 package Learning
 
-import DataMatrix.DataMatrix
 import DataVector.DataVector
 
 import scala.collection.mutable.ListBuffer
 
-object NeuralNetwork {
+case class NeuralNetwork (numberInputs: Int, numberHiddenLayers: Int, sizeHiddenLayers: Int, sizeOutputLayer: Int) {
 
-  def stepFunction(x: Double): Int = {
-    if (x >= 0)
-      1
+  val hiddenLayers: List[NeuralLayer] = initHiddenLayers
+
+  val outputLayer: NeuralLayer =
+    if (numberHiddenLayers > 0)
+      NeuralLayer(sizeHiddenLayers, sizeOutputLayer)
     else
-      0
+      NeuralLayer(numberInputs, sizeOutputLayer)
+
+  def initHiddenLayers: List[NeuralLayer] = {
+
+    val aux = new ListBuffer[NeuralLayer]
+    for (i <- 0 until numberHiddenLayers) {
+      if (i == 0) {
+        aux.append(NeuralLayer(numberInputs, sizeHiddenLayers))
+      }
+      else {
+        aux.append(NeuralLayer(sizeHiddenLayers, sizeHiddenLayers))
+      }
+    }
+
+    aux.toList
   }
 
-  def output(weights: DataVector, bias: Double, x: DataVector): Int = {
-    stepFunction((weights dot x) + bias)
+  def feedForward(inputs: DataVector): DataVector = {
+
+    var aux = inputs
+    for (i <- hiddenLayers.indices) {
+      if (i == 0) {
+        aux = hiddenLayers.head.evaluateLayer(inputs)
+      }
+      else {
+        aux = hiddenLayers.apply(i).evaluateLayer(aux)
+      }
+    }
+
+    outputLayer.evaluateLayer(aux)
   }
 
-  def sigmoid(t: Double): Double = {
-    1.0 / (1.0 + math.exp(-t))
+  def adjustWeights(inputs: DataVector, outputs: DataVector, target: Double): Unit = {
+    hiddenLayers.foreach(_.adjustWeights(outputs, inputs, target))
+    outputLayer.adjustWeights(outputs, inputs, target)
   }
 
-  def neuron_output(weights: DataVector, inputs: DataVector): Double = {
-    sigmoid(weights dot inputs)
-  }
+  def printWeights(): Unit = {
+    for (i <- hiddenLayers.indices) {
+      println(s"Hidden Layer $i")
+      hiddenLayers.apply(i).weights.matrix.foreach(println)
+      println(hiddenLayers.apply(i).bias)
+      println()
+    }
 
-  def feedForward(neuralNetwork: DataMatrix, input: DataVector, bias: DataVector): DataVector = {
-
-    var inputVector = input
-    val outputs = new ListBuffer[DataVector]()
-
-    neuralNetwork.matrix.foreach(x => {
-      val inputWithBias = input append bias
-      val output = x.v.map(a => neuron_output(x, inputWithBias))
-      outputs.append(DataVector(output))
-      inputVector = DataVector(output)
-    })
-
-    null
+    println("Output Layer")
+    outputLayer.weights.matrix.foreach(println)
+    println("bias -> " + outputLayer.bias)
+    println()
   }
 
 }

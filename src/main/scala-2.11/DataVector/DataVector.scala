@@ -1,7 +1,5 @@
 package DataVector
 
-import scala.collection.JavaConverters._
-
 case class DataVector (vector: List[Double]) {
 
   val v = vector
@@ -9,6 +7,9 @@ case class DataVector (vector: List[Double]) {
   var classification: String = ""
   var header = List[String]()
 
+  def this() {
+    this(List())
+  }
 
   def size: Int = {
     v.length
@@ -27,7 +28,7 @@ case class DataVector (vector: List[Double]) {
   }
 
   def *(that: Double): DataVector = {
-    new DataVector(this.v.map(x => x * that))
+    DataVector(this.v.map(x => x * that))
   }
 
   def dot(that: DataVector): Double = {
@@ -113,18 +114,10 @@ case class DataVector (vector: List[Double]) {
     }
   }
 
-  def append(that: Any): DataVector = {
-
-    that match {
-      case v: DataVector =>
-        DataVector(this.v ++ v.v)
-      case l: List[Double] =>
-        DataVector(this.v ++ l)
-      case _ =>
-        throw  new Exception("append can only accept List[Double] and DataVector as arguments")
-    }
-
+  def append(that: DataVector): DataVector = {
+    DataVector(this.v ++ that.v)
   }
+
   def toList: List[Double] = {
     this.v
   }
@@ -141,4 +134,5 @@ case class DataVector (vector: List[Double]) {
         false
     }
   }
+
 }

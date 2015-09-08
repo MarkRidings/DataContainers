@@ -8,6 +8,10 @@ case class DataMatrix (matrix: List[DataVector]) {
 
   private val _matrix = matrix
 
+  def this() {
+    this(List())
+  }
+
   for (m <- _matrix) {
     if (m.size != shape._2)
       throw new Exception("All DataVectors in a matrix must be the same size")
@@ -46,6 +50,10 @@ case class DataMatrix (matrix: List[DataVector]) {
     }
 
     true
+  }
+
+  def head: DataVector = {
+    getRow(0)
   }
 
   def +(that: DataMatrix): DataMatrix = {
